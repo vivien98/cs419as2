@@ -17,7 +17,7 @@ def logistic_loss(targets, outputs):
 	l_loss = 0.00
 	for i in range(len(outputs)):
 		a = targets[i]*outputs[i]
-		l_loss += np.log(1+np.exp(-a/10))
+		l_loss += np.log(1+np.exp(-a))
 	return l_loss
 
 def perceptron_loss(targets, outputs):
@@ -65,9 +65,9 @@ def logistic_grad(weights,inputs, targets, outputs):
 	# Write thee logistic loss loss gradient here
 		l_grad = np.zeros(len(weights))
 		for inst in range(len(inputs)):
-			expn = np.exp(-outputs[inst]*targets[inst]/10)
-			c = -expn/(0.1+expn)
-			l_grad = np.add(l_grad , c*outputs[inst]*inputs[inst])
+			expn = np.exp(-outputs[inst]*targets[inst])
+			c = -expn/(1+expn)
+			l_grad = np.add(l_grad , c*targets[inst]*inputs[inst])
 		return l_grad
 
 def perceptron_grad(weights,inputs, targets, outputs):

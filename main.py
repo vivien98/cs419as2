@@ -88,7 +88,7 @@ def get_gradient_function(trainx,trainy,loss_type, regularizer_type, loss_weight
 def train(data_loader, loss_type, regularizer_type, loss_weight):
     initial_model_parameters = np.random.random((data_loader.num_features))
 
-    num_epochs=1000
+    num_epochs=10
     for i in range(num_epochs):
         loss=0
         if(i==0):
@@ -105,7 +105,7 @@ def train(data_loader, loss_type, regularizer_type, loss_weight):
                                         method="CG", 
                                         jac=gradient_function,
                                         options={'disp': False,
-                                                 'maxiter': 10})
+                                                 'maxiter': 15})
             loss+=objective_function(trained_model_parameters.x)
             start_parameters=trained_model_parameters.x
             #print(trained_model_parameters)
