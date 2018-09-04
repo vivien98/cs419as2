@@ -89,40 +89,45 @@ def get_gradient_function(trainx,trainy,loss_type, regularizer_type, loss_weight
     return gradient_function
 
 def train(data_loader, loss_type, regularizer_type, loss_weight):
-	
-	initial_model_parameters = np.random.random((data_loader.num_features))
-   	loss_arr = []
-   	num_epochs=10
-   	for i in range(num_epochs):
-   	    loss=0
-   	    if(i==0):
-   	        start_parameters=initial_model_parameters
-   	    for j in range(len(data_loader)):
-   	        trainx,trainy=data_loader[j]
-   	        objective_function = get_objective_function(trainx,trainy,loss_type, 
-   	                                            regularizer_type,loss_weight)
-   	        gradient_function = get_gradient_function(trainx,trainy, loss_type, 
-   	                                          regularizer_type, loss_weight)
-   	        # to know about this function please read about scipy.optimise.minimise
-   	        trained_model_parameters = minimize(objective_function, 
-   	                                    start_parameters, 
-   	                                    method="CG", 
-   	                                    jac=gradient_function,
-   	                                    options={'disp': False,
-   	                                             'maxiter': 1})
-   	        loss+=objective_function(trained_model_parameters.x)
-   	        start_parameters=trained_model_parameters.x
-   	        #print(trained_model_parameters)
-   	    # prints the batch loss
-   	    print("loss is  ",loss)
-   	    loss_arr.append(loss)
-   	N = len(loss_arr)/10  
-   	plt.plot(loss_arr)  
-    # loss_arr = np.convolve(loss_arr	,np.ones((N,))/N,mode='valid')    
-    # plt.plot(loss_arr)  
-   	print("Optimizer information:")
-   	print(trained_model_parameters)
-   	print(initial_model_parameters)
+	for i in range(4):
+		initial_model_parameters = np.random.random((data_loader.num_features))
+	   	loss_arr = []
+	   	num_epochs=10
+	   	if i == 0: loss_weight = 0.1
+	   	if i == 1: loss_weight = 1
+	   	if i == 2: loss_weight = 5
+	   	if i == 3: loss_weight = 10
+	  
+	   	for i in range(num_epochs):
+	   	    loss=0
+	   	    if(i==0):
+	   	        start_parameters=initial_model_parameters
+	   	    for j in range(len(data_loader)):
+	   	        trainx,trainy=data_loader[j]
+	   	        objective_function = get_objective_function(trainx,trainy,loss_type, 
+	   	                                            regularizer_type,loss_weight)
+	   	        gradient_function = get_gradient_function(trainx,trainy, loss_type, 
+	   	                                          regularizer_type, loss_weight)
+	   	        # to know about this function please read about scipy.optimise.minimise
+	   	        trained_model_parameters = minimize(objective_function, 
+	   	                                    start_parameters, 
+	   	                                    method="CG", 
+	   	                                    jac=gradient_function,
+	   	                                    options={'disp': False,
+	   	                                             'maxiter': 1})
+	   	        loss+=objective_function(trained_model_parameters.x)
+	   	        start_parameters=trained_model_parameters.x
+	   	        #print(trained_model_parameters)
+	   	    # prints the batch loss
+	   	    print("loss is  ",loss)
+	   	    loss_arr.append(loss)
+	   	N = len(loss_arr)/10  
+	   	plt.plot(loss_arr)  
+	    # loss_arr = np.convolve(loss_arr	,np.ones((N,))/N,mode='valid')    
+	    # plt.plot(loss_arr)  
+	   	print("Optimizer information:")
+	   	print(trained_model_parameters)
+	   	print(initial_model_parameters)
    	plt.savefig("plot.png")  
    	return trained_model_parameters.x
             
