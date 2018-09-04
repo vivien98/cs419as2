@@ -3,6 +3,7 @@ from scipy.optimize import minimize
 
 import utils
 import numpy as np
+import matplotlib.pyplot as plt
 
 class DataLoader(object):
     # this class has a standard iterator declared
@@ -89,7 +90,7 @@ def get_gradient_function(trainx,trainy,loss_type, regularizer_type, loss_weight
 
 def train(data_loader, loss_type, regularizer_type, loss_weight):
     initial_model_parameters = np.random.random((data_loader.num_features))
-
+    loss_arr = []
     num_epochs=100
     for i in range(num_epochs):
         loss=0
@@ -107,13 +108,18 @@ def train(data_loader, loss_type, regularizer_type, loss_weight):
                                         method="CG", 
                                         jac=gradient_function,
                                         options={'disp': False,
-                                                 'maxiter': 5})
+                                                 'maxiter': 1})
             loss+=objective_function(trained_model_parameters.x)
             start_parameters=trained_model_parameters.x
             #print(trained_model_parameters)
         # prints the batch loss
         print("loss is  ",loss)
-        
+        loss_arr.append(loss)
+    N = len(loss_arr)/10  
+    plt.plot(loss_arr)  
+    # loss_arr = np.convolve(loss_arr	,np.ones((N,))/N,mode='valid')    
+    # plt.plot(loss_arr)
+    plt.savefig("plot.png")    
     print("Optimizer information:")
     print(trained_model_parameters)
     print(initial_model_parameters)
