@@ -90,7 +90,7 @@ def get_gradient_function(trainx,trainy,loss_type, regularizer_type, loss_weight
 def train(data_loader, loss_type, regularizer_type, loss_weight):
     initial_model_parameters = np.random.random((data_loader.num_features))
 
-    num_epochs=100
+    num_epochs=10
     for i in range(num_epochs):
         loss=0
         if(i==0):
@@ -123,8 +123,12 @@ def train(data_loader, loss_type, regularizer_type, loss_weight):
 def test(inputs, weights):
     outputs = classify(inputs, weights)
     probs = 1/(1+np.exp(-outputs))
+    probs = np.round(probs)
     # this is done to get all terms in 0 or 1 You can change for -1 and 1
-    return np.round(probs)
+    for k in range (len(probs)):
+        if(probs[k]==0):
+            probs[k] = -1
+    return probs
 
 def write_csv_file(outputs, output_file):
     # dumps the output file
